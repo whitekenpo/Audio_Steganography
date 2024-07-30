@@ -45,73 +45,11 @@ using namespace std;
         return decoded_message;
     }
 
-    string Decoder::DSSS_decode(int message_length_bits) {
+    string Decoder::DSSS_decode() {
         cout << "Decoding file with DSSS algorithm" << endl;
-
-        // 1. Extract the spread message from the stego data
-        vector<int> extracted_spread_message = extractSpreadMessage();
-
-        // 2. Create the chip codes (pseudo-random sequences)
-        int chip_length = 31; // Should match the encoder
-        vector<int> chip_code = generateChipCode(chip_length);
-
-        // 3. Despread the message
-        vector<int> despread_message = despreadMessage(extracted_spread_message, chip_code, message_length_bits);
-
-        // 4. Convert binary to text
-        string decoded_message = binaryToText(despread_message);
+        string decoded_message = "";
 
         return decoded_message;
-    }
-
-    vector<int> Decoder::extractSpreadMessage() {
-        vector<int> spread_message;
-        double alpha = 0.9; // Should match the encoder's embedding strength
-        for (size_t i = WAV_HEADER_END; i < m_stego_data_buffer.size(); ++i) {
-            double stego_sample = static_cast<unsigned char>(m_stego_data_buffer[i]);
-            int extracted_bit = static_cast<int>(round((stego_sample - round(stego_sample)) / alpha));
-            spread_message.push_back(extracted_bit);
-        }
-        return spread_message;
-    }
-
-    vector<int> Decoder::generateChipCode(int length) {
-        // This should generate the same chip code as the encoder
-        // For simplicity, we'll use a fixed seed here, but in practice, this should be synchronized with the encoder
-        mt19937 gen(12345);
-        uniform_int_distribution<> dis(0, 1);
-
-        vector<int> chip_code(length);
-        for (int& chip : chip_code) {
-            chip = dis(gen) * 2 - 1; // Generate -1 or 1
-        }
-        return chip_code;
-    }
-
-    vector<int> Decoder::despreadMessage(const vector<int>& spread_message, const vector<int>& chip_code, int message_length_bits) {
-        vector<int> despread_message;
-        int chip_sum = 0;
-        for (size_t i = 0; i < spread_message.size(); ++i) {
-            chip_sum += spread_message[i] * chip_code[i % chip_code.size()];
-            if ((i + 1) % chip_code.size() == 0) {
-                despread_message.push_back(chip_sum >= 0 ? 1 : -1);  // Change to use >= 0
-                chip_sum = 0;
-                if (despread_message.size() == message_length_bits) break;
-            }
-        }
-        return despread_message;
-    }
-
-    string Decoder::binaryToText(const vector<int>& binary) {
-        string text;
-        for (size_t i = 0; i < binary.size(); i += 8) {
-            char c = 0;
-            for (size_t j = 0; j < 8 && i + j < binary.size(); ++j) {
-                c = (c << 1) | (binary[i + j] == 1 ? 1 : 0);  // Convert back to 0 and 1 for bitwise operations
-            }
-            text += c;
-        }
-        return text;
     }
 
     void Decoder::set_m_stego_data_buffer(vector<char> new_buffer){

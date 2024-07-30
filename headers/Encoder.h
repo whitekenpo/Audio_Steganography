@@ -3,6 +3,7 @@
 
 #include "IoControl.h"
 #include "Tools.h"
+#include "algorithms.h"
 
 #include <iostream>
 #include <vector>
@@ -24,10 +25,7 @@ private:
     vector<char> get_cover_data_buffer();
 
     // function for DSSS
-    vector<int> textToBinary(const std::string& text);
-    vector<int> generateChipCode(int length);
-    vector<int> spreadMessage(const vector<int>& message, const vector<int>& chip_code);
-    void embedMessage(const vector<int>& spread_message);
+
 public:
     Encoder(/* args */);
     ~Encoder();
