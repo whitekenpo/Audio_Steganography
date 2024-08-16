@@ -12,7 +12,9 @@ stegan_algorithms algorithms_detect(vector<char> &buffer){
 	case Lsb:
 		return Lsb;
 		break;
-	
+	case DSSS:
+		return DSSS;
+		break;
 	default:
 		return None;
 		break;

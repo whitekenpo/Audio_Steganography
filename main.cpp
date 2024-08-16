@@ -39,7 +39,8 @@ int interFace(){
 		encoder.read_wav_file(inputfile);
 
 		// hide the message
-		encoder.Lsb_encode(message);
+		// encoder.Lsb_encode(message);
+		encoder.DSSS_encode(message);
 
 		// output the messages
 		encoder.write_wav_file(outputFile);	
@@ -51,12 +52,21 @@ int interFace(){
 		decoder.decode_file(inputfile);
 	}/*
 	 else if (mode == 4){
-		cout << "mode == 4, test mode !!!" << endl;
-		Encoder a_encoder;
-		a_encoder.read_wav_file("Saturday.wav");
-		a_encoder.DSSS_encode("ricky");
-		a_encoder.write_wav_file("output.wav");
-		cout << "end mode 4" << endl;
+		// Example usage
+		
+		Encoder encoder;
+		encoder.read_wav_file("Saturday.wav");
+		encoder.get_cover_data_buffer();
+		std::vector<double> signal = convertCharToDouble(encoder.get_cover_data_buffer());
+
+		std::string message = "Hello, World!";
+		int L_min = 8192;
+		bool graf = false;
+
+		std::vector<double> stego = dsss_enc(signal, message, L_min, graf);
+		std::string recovered_message = dsss_dec(stego, message.size(), L_min);
+
+		std::cout << "Recovered message: " << recovered_message << std::endl;
 
 	}	else if (mode == 5){
 		cout << "mode == 5, decoder test mode !!!" << endl;

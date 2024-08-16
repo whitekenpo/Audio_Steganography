@@ -16,7 +16,7 @@ using namespace std;
 #define WAV_HEADER_END 44   // the header for .wav file is from 0-43 bytes
 
 // define algorithms code
-enum stegan_algorithms{None, Lsb};
+enum stegan_algorithms{None, Lsb, DSSS};
 
 stegan_algorithms algorithms_detect(vector<char> &buffer);
 
